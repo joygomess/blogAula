@@ -1,0 +1,1 @@
+im da função checarNome
