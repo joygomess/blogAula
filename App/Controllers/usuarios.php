@@ -1,7 +1,7 @@
 <?php
 
-class Usuarios extends Controller
-{
+class Usuarios extends Controller{
+
 
     public function cadastrar()
     {
@@ -33,13 +33,27 @@ class Usuarios extends Controller
                     $dados['confirma_senha_erro'] = 'Confirme a Senha';
                 endif;
             else :
-                
-                if (strlen($formulario['senha']) < 6) :
+                if(Checa::checarNome($formulario['nome'])):
+                    $dados['nome_erro'] = 'o nome informado é inválido.';
+                    elseif(Checa::checarEmail($formulario['email'])):
+                        $dados['email_erro'] = 'o email informado é inválido.';
+                elseif (strlen($formulario['senha']) < 6) :
                     $dados['senha_erro'] = 'A senha deve ter no minimo 6 caracteres';
                 elseif ($formulario['senha'] != $formulario['confirma_senha']) :
                     $dados['confirma_senha_erro'] = 'As senhas são diferentes';
                 else:
+                    $dados ['senha'] = password_hash($formulario['senha'],PASSWORD_DEFAULT);
+                    if($this->usuarioModel->armazenar($dados)):
+                        echo 'Cadastro realizado com sucesso';
                     echo 'Pode cadastrar os dados<hr>';
+
+                  /*  echo 'senha Original'.$formulario['senha']."<hr>";
+                    echo 'senha MD5'.md5($formulario['senha'])."<hr>";
+                    echo '<hr>';
+                    $senha_segura = password_hash($formulario['senha'],PASSWORD_DEFAULT);
+                    echo 'senha hash: '.$senha_segura.'<hr>';
+                    var_dump($formulario);
+                    */
                 endif;
 
             endif;
